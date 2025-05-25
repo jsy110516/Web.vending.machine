@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 충전 승인</title>
+    <style>
+        :root {
+            --cf-blue: #2563eb;
+            --cf-dark: #202124;
+            --cf-light: #f6f8fa;
+            --cf-border: #d0d7de;
+            --cf-card: #fff;
+            --cf-accent: #0ea5e9;
+            --cf-radius: 12px;
+            --cf-shadow: 0 2px 12px 0 rgba(27, 31, 35, 0.08), 0 1.5px 1.5px 0 rgba(27, 31, 35, 0.03);
+            --cf-sidebar: #f3f6fa;
+        }
+        body { font-family:'Inter','Noto Sans KR',sans-serif;background:var(--cf-light);margin:0;color:var(--cf-dark);}
+        .sidebar {
+            position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: var(--cf-sidebar);
+            border-right: 1px solid var(--cf-border);
+            display: flex; flex-direction: column; align-items: center; padding-top: 40px; z-index: 100;
+            box-shadow: var(--cf-shadow);
+        }
+        .sidebar a, .sidebar form button {
+            display: block; width: 170px; margin: 12px 0; padding: 13px 0; background: var(--cf-card); color: var(--cf-blue);
+            border: 1px solid var(--cf-border); border-radius: var(--cf-radius); text-align: center; font-size: 1.08em; font-weight: 500; text-decoration: none;
+            transition: background 0.13s, color 0.13s, box-shadow 0.13s; cursor: pointer; box-shadow: 0 1.5px 5px rgba(27,31,35,0.04);
+        }
+        .sidebar a:hover, .sidebar form button:hover { background: var(--cf-blue); color: #fff; border-color: var(--cf-blue); box-shadow: 0 0 0 2px var(--cf-accent)33;}
+        .container { background: var(--cf-card); padding:38px 22px 32px 22px; border-radius:var(--cf-radius); max-width:900px; margin:60px auto; position:relative;margin-left:250px; box-shadow:var(--cf-shadow); border:1.5px solid var(--cf-border);}
+        table { width:100%;border-collapse:separate;border-spacing:0;background:var(--cf-light);border-radius:var(--cf-radius);overflow:hidden;box-shadow:0 1px 2px 0 #eaeaea;}
+        th,td { padding:11px 8px;text-align:center;border-bottom:1.5px solid var(--cf-border);}
+        th { color:var(--cf-blue);background:#e8f1fd;font-weight:600;border-bottom:2.5px solid var(--cf-blue);}
+        tr:last-child td { border-bottom:none;}
+        button { background:var(--cf-blue);color:#fff;border:none;padding:9px 28px;border-radius:7px;font-size:1em;cursor:pointer;transition:background .15s;font-weight:600;}
+        button[disabled] { background: #bcd5fa; color: #6483b6; cursor:not-allowed;}
+        button:hover:not([disabled]) { background: var(--cf-accent);}
+        .footer-left { position: absolute; left: 16px; bottom: 16px; color: var(--cf-blue); font-size: 0.99em; opacity: 0.8; z-index: 10; font-family: inherit;}
+        .logo-fixed-br { position: absolute; right: 16px; bottom: 16px; opacity: 0.9; z-index: 10; width: 40px; height: 40px;}
+        .copyright-intory {
+            position: absolute; top: 18px; right: 28px; color: #767676; font-size: 0.93em; z-index: 200; font-family: inherit; opacity: 0.75;
+        }
+        @media (max-width: 900px) {
+            .container { margin-left: 0; max-width: 100vw; border-radius: 0; padding: 10px 2vw;}
+            .sidebar { width: 100vw; height: auto; flex-direction: row; justify-content: center; position: static; box-shadow: none; border-right: none; border-bottom: 1.5px solid var(--cf-border); padding: 6px 0 3px 0;}
+            .sidebar a, .sidebar form button { width: 110px; margin: 6px 4px; padding: 8px 0; font-size: 0.97em;}
+            .footer-left, .logo-fixed-br { left: 8px; right: 8px; bottom: 8px;}
+            .copyright-intory { position: static; display: block; text-align: right; margin: 10px 8px 0 0;}
+        }
+        .reject-btn { background: #e74c3c; }
+        .reject-btn:hover { background: #c0392b; }
+        .notice-edit-box {
+            background:#fffbe6;
+            border:1px solid #ffe58f;
+            border-radius:7px;
+            margin-bottom:22px;
+            padding:13px 16px 16px 16px;
+        }
+        .notice-edit-box label { color:#d48806;font-weight:600; }
+        .notice-edit-box textarea { width:100%;min-height:55px;border-radius:6px;border:1px solid #ffe58f;padding:7px; }
+        .notice-edit-box button { background:#ffd666;color:#b26d00;margin-top:8px; }
+        .notice-edit-box button:hover { background:#ffe58f;color:#d48806; }
+        .deposit-img-thumb { max-width: 110px; max-height: 90px; border-radius: 4px; border:1px solid #eee;}
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.keyCode === 123 ||
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+            (e.ctrlKey && e.keyCode === 85) ||
+            (e.metaKey && e.altKey && e.keyCode === 73)
+        ) {
+            e.preventDefault(); e.stopPropagation(); return false;
+        }
+    });
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+    document.addEventListener('mousedown', function(e){ if(e.button === 2) { e.preventDefault(); return false; }});
+    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    var checkStatus = function() {
+        var before = new Date();
+        debugger;
+        var after = new Date();
+        if(after - before > 200) { window.location.href = '/'; }
+    };
+    setInterval(checkStatus, 1500);
+})();
+</script>
+    <span class="copyright-intory">Copyright:Intory</span>
+    <nav class="sidebar">
+        <a href="{{ url_for('index') }}">메인(구매)</a>
+        <a href="{{ url_for('reviews') }}">구매후기</a>
+        <a href="{{ url_for('charge_request') }}">충전요청하기</a>
+        <a href="{{ url_for('admin_charge') }}">관리자페이지</a>
+        <a href="{{ url_for('admin_products') }}">재고관리</a>
+        <form action="{{ url_for('logout') }}" method="get" style="margin:0;padding:0;">
+            <button type="submit">로그아웃</button>
+        </form>
+    </nav>
+    <div class="container">
+        <h1>충전 요청 승인</h1>
+        <div class="notice-edit-box">
+            <form method="post" action="{{ url_for('admin_notice') }}">
+                <label for="notice_content">공지사항 (메인화면 상단에 노출됩니다)</label>
+                <textarea name="notice_content" id="notice_content" placeholder="공지사항을 입력하세요..." required>{{ notice_content }}</textarea>
+                <button type="submit">공지사항 저장</button>
+            </form>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="post">
+            <table>
+                <tr>
+                    <th>요청자</th>
+                    <th>입금자명</th>
+                    <th>금액</th>
+                    <th>입금사진</th>
+                    <th>요청시각</th>
+                    <th>처리</th>
+                </tr>
+                {% for req in requests %}
+                <tr>
+                    <td>{{ req.username }}</td>
+                    <td>{{ req.depositor }}</td>
+                    <td>{{ req.amount }}</td>
+                    <td>
+                        {% if req.deposit_image %}
+                            <a href="{{ url_for('deposit_image', filename=req.deposit_image) }}" target="_blank">
+                                <img src="{{ url_for('deposit_image', filename=req.deposit_image) }}" class="deposit-img-thumb" alt="입금사진">
+                            </a>
+                        {% else %}
+                            <span style="color:#aaa;">(없음)</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ req.requested_at }}</td>
+                    <td>
+                        <button type="submit" name="req_id" value="{{ req.id }}" onclick="setAction('approve', this)">승인</button>
+                        <button type="submit" class="reject-btn" name="req_id" value="{{ req.id }}" onclick="setAction('reject', this)">거절</button>
+                        <input type="hidden" name="action" value="">
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="6" style="color:#888;">대기중인 충전요청이 없습니다.</td></tr>
+                {% endfor %}
+            </table>
+        </form>
+        <img src="https://dktj.intoryvend.xyz/static/assets/img/favicon/favicon.ico" alt="logo" class="logo-fixed-br">
+        <div class="footer-left">Made by Intory Inc.</div>
+    </div>
+    <script>
+        function setAction(action, btn) {
+            var row = btn.closest('td');
+            var actionInput = row.querySelector('input[name="action"]');
+            if(actionInput) actionInput.value = action;
+        }
+    </script>
+</body>
+</html>

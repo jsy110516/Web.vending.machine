@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>충전 요청</title>
+    <style>
+        :root {
+            --cf-blue: #2563eb;
+            --cf-dark: #202124;
+            --cf-light: #f6f8fa;
+            --cf-border: #d0d7de;
+            --cf-card: #fff;
+            --cf-accent: #0ea5e9;
+            --cf-radius: 12px;
+            --cf-shadow: 0 2px 12px 0 rgba(27, 31, 35, 0.08), 0 1.5px 1.5px 0 rgba(27, 31, 35, 0.03);
+        }
+        body { background: var(--cf-light); font-family: 'Inter','Noto Sans KR', sans-serif; margin: 0; }
+        .container { background: var(--cf-card); border-radius: var(--cf-radius); max-width: 430px; margin: 50px auto; padding: 38px 28px 34px 28px; box-shadow: var(--cf-shadow); border:1.5px solid var(--cf-border);}
+        h2 { color: var(--cf-blue); text-align: center; margin-bottom: 26px; font-size: 1.5em;}
+        label { display: block; margin-top: 14px; margin-bottom: 5px; color: var(--cf-blue);}
+        input[type="text"], input[type="number"], input[type="file"] {
+            width: 100%; padding: 9px; border: 1.5px solid var(--cf-border); border-radius: 7px; font-size: 1em; margin-bottom: 15px; background: #f4f8fb;
+        }
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--cf-blue);
+        }
+        button {
+            width: 100%; background: var(--cf-blue); color: #fff; border: none; border-radius: 8px;
+            padding: 15px; font-size: 1.13em; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 1px 3px #ececec;
+            transition: background .14s;
+        }
+        button:hover { background: var(--cf-accent);}
+        .msg { margin: 15px 0 0 0; color: #b22222; font-size: 1.02em; text-align: center;}
+        .success { color: var(--cf-blue);}
+    </style>
+</head>
+<body>
+<script>
+(function(){
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.keyCode === 123 ||
+            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+            (e.ctrlKey && e.keyCode === 85) ||
+            (e.metaKey && e.altKey && e.keyCode === 73)
+        ) {
+            e.preventDefault(); e.stopPropagation(); return false;
+        }
+    });
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
+    document.addEventListener('mousedown', function(e){ if(e.button === 2) { e.preventDefault(); return false; }});
+    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    var checkStatus = function() {
+        var before = new Date();
+        debugger;
+        var after = new Date();
+        if(after - before > 200) { window.location.href = '/'; }
+    };
+    setInterval(checkStatus, 1500);
+})();
+</script>
+    <div class="container">
+        <h2>충전 요청</h2>
+        <form id="charge-form" method="post" enctype="multipart/form-data">
+            <label for="depositor">입금자명</label>
+            <input type="text" name="depositor" id="depositor" required>
+            <label for="amount">금액</label>
+            <input type="number" name="amount" id="amount" min="1" required>
+            <label for="deposit_image">입금 사진 (선택)</label>
+            <input type="file" name="deposit_image" id="deposit_image" accept="image/*">
+            <button type="submit">충전 요청</button>
+        </form>
+        <div class="msg" id="msg"></div>
+    </div>
+    <script>
+        document.getElementById('charge-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            document.getElementById('msg').textContent = "요청 처리중...";
+            const resp = await fetch("/charge_request", {
+                method: "POST",
+                body: formData
+            });
+            const data = await resp.json();
+            if (data.ok) {
+                document.getElementById('msg').textContent = "충전 요청이 완료되었습니다!";
+                form.reset();
+            } else {
+                document.getElementById('msg').textContent = data.msg || "요청 실패";
+            }
+        };
+    </script>
+</body>
+</html>
