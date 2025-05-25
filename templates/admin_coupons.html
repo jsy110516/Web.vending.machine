@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>쿠폰 관리</title>
+    <style>
+        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: #f6f8fa; margin: 0; color: #202124;}
+        .container { max-width: 640px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.08); border:1.5px solid #d0d7de; padding: 36px 32px; }
+        h1 { color: #2563eb; text-align: center; margin-bottom: 32px;}
+        form { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: flex-end; margin-bottom: 24px;}
+        label { font-weight: 500; color: #2563eb; margin-bottom: 4px;}
+        input, textarea { border: 1.5px solid #d0d7de; border-radius: 7px; padding: 8px 11px; font-size: 1em; }
+        input[type="number"] { width: 100px;}
+        input[type="text"] { width: 160px;}
+        textarea { resize: vertical; min-height: 30px; max-width: 200px;}
+        button { background: #2563eb; color: #fff; border-radius: 7px; border:none; padding: 11px 25px; font-size: 1em; font-weight: 600; cursor:pointer;}
+        button:hover { background: #0ea5e9;}
+        table { width:100%; border-collapse:collapse; margin-top:18px;}
+        th, td { padding:10px 6px; border-bottom:1.5px solid #d0d7de; text-align:center;}
+        th { background:#f4f8fb; color:#2563eb;}
+        tr:last-child td { border-bottom:none;}
+        .messages { margin-bottom: 20px;}
+        .messages div { padding: 10px 15px; border-radius: 9px; margin-bottom: 10px; font-size: 1.01em; background: #e0f2ff; color: #1e293b; border: 1px solid #bae6fd;}
+        .success { background: #e6ffe6; color: #184d27; border-color: #abefbc;}
+        .danger  { background: #ffeded; color: #a81f1f; border-color: #ffc2c2;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>쿠폰 생성/관리</h1>
+    <div class="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <form method="post">
+        <div>
+            <label for="code">쿠폰코드*</label><br>
+            <input type="text" id="code" name="code" maxlength="32" required>
+        </div>
+        <div>
+            <label for="description">설명</label><br>
+            <textarea name="description" id="description"></textarea>
+        </div>
+        <div>
+            <label for="amount">금액*</label><br>
+            <input type="number" name="amount" id="amount" min="1" required>
+        </div>
+        <div>
+            <label for="max_uses">최대 사용횟수*</label><br>
+            <input type="number" name="max_uses" id="max_uses" min="1" required>
+        </div>
+        <div>
+            <button type="submit">쿠폰 등록</button>
+        </div>
+    </form>
+    <table>
+        <tr>
+            <th>쿠폰코드</th>
+            <th>설명</th>
+            <th>금액</th>
+            <th>최대사용횟수</th>
+            <th>남은횟수</th>
+            <th>생성일</th>
+        </tr>
+        {% for coupon in coupons %}
+        <tr>
+            <td>{{coupon.code}}</td>
+            <td>{{coupon.description}}</td>
+            <td>{{coupon.amount}}</td>
+            <td>{{coupon.max_uses}}</td>
+            <td>{{coupon.max_uses - coupon.used_count}}</td>
+            <td>{{coupon.created_at[:10]}}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="6">등록된 쿠폰이 없습니다.</td></tr>
+        {% endfor %}
+    </table>
+    <div style="margin-top:22px;">
+        <a href="{{ url_for('admin_charge') }}" style="color:#2563eb;">← 관리자페이지로 돌아가기</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>쿠폰 사용</title>
+    <style>
+        body { background:#f6f8fa; font-family: 'Inter','Noto Sans KR',sans-serif;}
+        .container { max-width: 390px; margin: 60px auto; background: #fff; border-radius: 12px; padding: 38px 32px 32px 32px; border:1.5px solid #d0d7de; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.08);}
+        h2 { text-align: center; color: #2563eb;}
+        form { display:flex; flex-direction:column; gap:12px;}
+        label { color: #2563eb; margin-bottom: 3px;}
+        input[type="text"] { border: 1.5px solid #d0d7de; border-radius: 7px; padding: 10px; font-size: 1em; background: #f4f8fb;}
+        button { background: #2563eb; color: #fff; border-radius: 7px; border:none; padding: 12px 0; font-size: 1.05em; font-weight: 600; cursor:pointer;}
+        button:hover { background: #0ea5e9;}
+        .msg { margin-top: 16px; color: #b22222; font-size: 1.02em; text-align: center;}
+        .success { color: #2563eb;}
+        .footer { margin-top: 22px; text-align:center; font-size:0.97em;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>쿠폰 사용</h2>
+    <div class="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <form method="post">
+        <label for="code">쿠폰코드 입력</label>
+        <input type="text" id="code" name="code" required maxlength="32">
+        <button type="submit">쿠폰 사용하기</button>
+    </form>
+    <div class="footer">
+        <a href="{{ url_for('index') }}" style="color:#2563eb;">← 메인으로 돌아가기</a>
+    </div>
+</div>
+</body>
+</html>

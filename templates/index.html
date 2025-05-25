@@ -4,307 +4,153 @@
     <meta charset="UTF-8">
     <title>포인트 자판기</title>
     <style>
-        :root {
-            --cf-blue: #2563eb;
-            --cf-dark: #202124;
-            --cf-light: #f6f8fa;
-            --cf-border: #d0d7de;
-            --cf-card: #fff;
-            --cf-accent: #0ea5e9;
-            --cf-radius: 12px;
-            --cf-shadow: 0 2px 12px 0 rgba(27, 31, 35, 0.08), 0 1.5px 1.5px 0 rgba(27, 31, 35, 0.03);
-            --cf-sidebar: #f3f6fa;
-        }
-        body {
-            font-family: 'Inter','Noto Sans KR',sans-serif;
-            background: var(--cf-light);
-            margin: 0;
-            color: var(--cf-dark);
-        }
-        .sidebar {
-            position: fixed;
-            top: 0; left: 0;
-            width: 210px; height: 100vh;
-            background: var(--cf-sidebar);
-            border-right: 1px solid var(--cf-border);
-            display: flex; flex-direction: column;
-            align-items: center; padding-top: 40px; z-index: 100;
-            box-shadow: var(--cf-shadow);
-        }
-        .sidebar a, .sidebar form button {
-            display: block;
-            width: 170px; margin: 12px 0; padding: 13px 0;
-            background: var(--cf-card);
-            color: var(--cf-blue); border: 1px solid var(--cf-border);
-            border-radius: var(--cf-radius);
-            text-align: center; font-size: 1.08em;
-            font-weight: 500; text-decoration: none;
-            transition: background 0.13s, color 0.13s, box-shadow 0.13s;
-            cursor: pointer;
-            box-shadow: 0 1.5px 5px rgba(27,31,35,0.04);
-        }
-        .sidebar a:hover, .sidebar form button:hover {
-            background: var(--cf-blue); color: #fff; border-color: var(--cf-blue);
-            box-shadow: 0 0 0 2px var(--cf-accent)33;
-        }
-        .container {
-            background: var(--cf-card);
-            padding: 38px 32px 32px 32px;
-            border-radius: var(--cf-radius);
-            box-shadow: var(--cf-shadow);
-            max-width: 600px;
-            margin: 60px auto;
-            position: relative;
-            margin-left: 250px;
-            border: 1px solid var(--cf-border);
-        }
-        h1 {
-            color: var(--cf-blue);
-            text-align: center;
-            margin-bottom: 28px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            font-size: 2.1em;
-        }
-        .balance {
-            font-size: 1.12em;
-            margin-bottom: 22px;
-            text-align: center;
-            color: var(--cf-blue);
-            font-weight: 600;
-        }
-        .mypurchase { text-align: center; margin-bottom: 12px; }
-        .mypurchase a { color: var(--cf-accent); text-decoration: underline;}
-        .messages { margin-bottom: 20px;}
-        .messages div {
-            padding: 12px 16px;
-            border-radius: 9px;
-            margin-bottom: 10px;
-            font-size: 1.01em;
-            background: #e0f2ff;
-            color: #1e293b;
-            border: 1px solid #bae6fd;
-        }
-        .success { background: #e6ffe6; color: #184d27; border-color: #abefbc;}
-        .danger  { background: #ffeded; color: #a81f1f; border-color: #ffc2c2;}
-        .info    { background: #e0f2ff; color: #1e293b; border-color: #bae6fd;}
-        table {
-            width: 100%;
-            margin-bottom: 20px;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: var(--cf-light);
-            border-radius: var(--cf-radius);
-            overflow: hidden;
-            box-shadow: 0 1px 2px 0 #eaeaea;
-        }
-        th, td {
-            padding: 11px 8px;
-            text-align: center;
-            border-bottom: 1.5px solid var(--cf-border);
-        }
-        th {
-            color: var(--cf-blue);
-            background: #e8f1fd;
-            font-weight: 600;
-            border-bottom: 2.5px solid var(--cf-blue);
-        }
-        tr:last-child td { border-bottom: none;}
-        .empty { color: #aaa; text-align: center;}
-        .logo-fixed-br {
-            position: absolute; right: 16px; bottom: 16px;
-            opacity: 0.9; z-index: 10; width: 40px; height: 40px;
-        }
-        .footer-left {
-            position: absolute; left: 16px; bottom: 16px;
-            color: var(--cf-blue); font-size: 0.99em; opacity: 0.8;
-            z-index: 10; font-family: inherit;
-        }
-        .copyright-intory {
-            position: absolute;
-            top: 18px; right: 28px;
-            color: #767676;
-            font-size: 0.93em; z-index: 200;
-            font-family: inherit; opacity: 0.75;
-        }
-        .notice-menu {
-            width: 100vw;
-            background: #e0f2ff;
-            color: #2563eb;
-            text-align: center;
-            padding: 16px 10px 14px 10px;
-            font-size: 1.13em;
-            font-weight: 600;
-            border-bottom: 2px solid #bae6fd;
-            letter-spacing: 1px;
-            margin-bottom: 24px;
-        }
-        .notice-label {
-            font-weight: bold;
-            margin-right: 7px;
-            color: #1671c5;
-        }
-        input[type="number"], input[type="text"] {
-            border: 1.5px solid var(--cf-border);
-            border-radius: 7px;
-            padding: 6px 9px;
-            font-size: 1em;
-            background: #f4f8fb;
-            transition: border .15s;
-            outline: none;
-        }
-        input[type="number"]:focus, input[type="text"]:focus {
-            border-color: var(--cf-blue);
-        }
-        button,
-        input[type="submit"] {
-            background: var(--cf-blue);
-            color: #fff;
-            border: none;
-            padding: 9px 28px;
-            border-radius: 7px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background .15s;
-            font-weight: 600;
-        }
-        button[disabled], input[type="submit"][disabled] {
-            background: #bcd5fa;
-            color: #6483b6;
-            cursor: not-allowed;
-        }
-        button:hover:not([disabled]), input[type="submit"]:hover:not([disabled]) {
-            background: var(--cf-accent);
-        }
-        @media (max-width: 900px) {
-            .container { margin-left: 0; max-width: 100vw; border-radius: 0; padding: 10px 2vw;}
-            .sidebar { width: 100vw; height: auto; flex-direction: row; justify-content: center; position: static; box-shadow: none; border-right: none; border-bottom: 1.5px solid var(--cf-border); padding: 6px 0 3px 0;}
+        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: #f6f8fa; margin: 0; color: #23272f;}
+        .sidebar { position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: #f3f6fa; border-right: 1px solid #d0d7de; display: flex; flex-direction: column; align-items: center; padding-top: 40px; z-index: 100; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.08);}
+        .sidebar a, .sidebar form button { display: block; width: 170px; margin: 12px 0; padding: 13px 0; background: #fff; color: #2563eb; border: 1px solid #d0d7de; border-radius: 12px; text-align: center; font-size: 1.08em; font-weight: 500; text-decoration: none; transition: background 0.13s, color 0.13s, box-shadow 0.13s; cursor: pointer; box-shadow: 0 1.5px 5px rgba(27,31,35,0.04);}
+        .sidebar a:hover, .sidebar form button:hover { background: #2563eb; color: #fff; border-color: #2563eb; box-shadow: 0 0 0 2px #0ea5e933;}
+        @media (max-width: 1100px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; justify-content: center; position: static; box-shadow: none; border-right: none; border-bottom: 1.5px solid #d0d7de; padding: 6px 0 3px 0;}
             .sidebar a, .sidebar form button { width: 110px; margin: 6px 4px; padding: 8px 0; font-size: 0.97em;}
-            .footer-left, .logo-fixed-br { left: 8px; right: 8px; bottom: 8px;}
-            .copyright-intory { position: static; display: block; text-align: right; margin: 10px 8px 0 0;}
         }
+        .main { max-width: 720px; margin: 0 auto; padding: 40px 0 40px 0;}
+        @media (min-width: 600px) {
+            .main { margin-left: 240px; }
+        }
+        .notice { background: #fffbe8; color: #ad6700; border: 1.5px solid #ffe58f; border-radius: 10px; padding: 13px 22px; margin-bottom: 28px; font-size: 1.09em; }
+        .greeting { font-size: 1.18em; color: #2563eb; margin-bottom: 18px; }
+        .user-info { background: #f4f7fd; border-radius: 8px; padding: 15px 18px; margin-bottom: 22px; border: 1.5px solid #d0d7de;}
+        .user-info span { margin-right: 18px; font-size: 1.07em;}
+        .products-table { width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.06); border:1.5px solid #d0d7de; margin-bottom: 28px;}
+        .products-table th, .products-table td { padding: 14px 10px; text-align: center;}
+        .products-table th { background: #eaf1fa; color: #1e293b; font-weight: 600;}
+        .products-table td { font-size: 1.08em;}
+        .products-table tr:not(:last-child) td { border-bottom: 1px solid #e3e7ee;}
+        .buy-form input[type="number"] { width: 55px; border-radius: 7px; border: 1.5px solid #d0d7de; padding: 5px 8px; font-size: 1.06em; }
+        .buy-btn { background: #2563eb; color: #fff; border-radius: 6px; border:none; padding: 7px 20px; font-size: 1em; font-weight: 600; cursor:pointer; transition: .14s;}
+        .buy-btn:hover { background: #0ea5e9;}
+        .msg { margin-bottom: 26px; }
+        .msg .success { color: #2563eb; background: #e6ffe6; border-radius: 8px; padding: 8px 13px;}
+        .msg .danger { color: #e11d48; background: #ffe6e6; border-radius: 8px; padding: 8px 13px;}
+        .purchases-box { background: #fff; border-radius: 10px; border: 1.5px solid #d0d7de; box-shadow: 0 1.5px 10px 0 rgba(27,31,35,0.06); margin-top: 26px; padding: 18px 22px;}
+        .purchases-box h3 { margin: 2px 0 16px 0; color: #2563eb; font-size: 1.11em;}
+        .purchases-table { width: 100%; border-collapse: collapse;}
+        .purchases-table th, .purchases-table td { padding: 9px 8px; text-align: center;}
+        .purchases-table th { background: #f1f5f9; color: #3c4354; font-weight: 600;}
+        .purchases-table td { font-size: 1.02em;}
+        .purchases-table tr:not(:last-child) td { border-bottom: 1px solid #e3e7ee;}
+        .empty-txt { color: #8d96a7; font-size: 1.01em; margin: 17px 0;}
     </style>
 </head>
 <body>
-<script>
-(function(){
-    // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U, Cmd+Opt+I (Mac), 우클릭, 드래그 방지
-    document.addEventListener('keydown', function(e) {
-        if (
-            e.keyCode === 123 || // F12
-            (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || // Ctrl+Shift+I/J
-            (e.ctrlKey && e.keyCode === 85) || // Ctrl+U
-            (e.metaKey && e.altKey && e.keyCode === 73) // Cmd+Opt+I (Mac)
-        ) {
-            e.preventDefault(); e.stopPropagation(); return false;
-        }
-    });
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
-    document.addEventListener('mousedown', function(e){ if(e.button === 2) { e.preventDefault(); return false; }});
-    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
-    // 콘솔 오픈 감지(아주 기본적, 완전 차단 불가)
-    var checkStatus = function() {
-        var before = new Date();
-        debugger; // 콘솔 열면 지연됨
-        var after = new Date();
-        if(after - before > 200) { window.location.href = '/'; }
-    };
-    setInterval(checkStatus, 1500);
-})();
-</script>
-    <span class="copyright-intory">Copyright:Intory</span>
-    <!-- 공지사항 메뉴 (맨 위 중앙) -->
-    <div class="notice-menu">
-        <span class="notice-label">공지사항</span>
-        <span id="notice-content">{{ notice_content|safe if notice_content else "등록된 공지사항이 없습니다." }}</span>
-    </div>
-    <nav class="sidebar">
-        <a href="{{ url_for('index') }}">메인(구매)</a>
+<nav class="sidebar">
+    <a href="{{ url_for('index') }}">제품구매</a>
+    {% if session.get('user_id') and session.get('user_id') != 'pee' %}
+        <a href="{{ url_for('my_purchases') }}">구매내역</a>
+        <a href="{{ url_for('charge_request') }}">포인트충전</a>
+        <a href="{{ url_for('charge_history') }}">충전내역</a>
+        <a href="{{ url_for('use_coupon') }}">쿠폰사용</a>
         <a href="{{ url_for('reviews') }}">구매후기</a>
-        <a href="{{ url_for('charge_request') }}">충전요청하기</a>
-        {% if session.get('is_admin') %}
-            <a href="{{ url_for('admin_charge') }}">관리자페이지</a>
-            <a href="{{ url_for('admin_products') }}">재고관리</a>
-        {% endif %}
-        {% if session.user_id %}
-            <form action="{{ url_for('logout') }}" method="get" style="margin:0;padding:0;">
-                <button type="submit">로그아웃</button>
-            </form>
-        {% else %}
-            <a href="{{ url_for('login') }}">로그인</a>
-        {% endif %}
-    </nav>
-    <div class="container">
-        <h1>포인트 자판기</h1>
-        {% if session.user_id %}
-          <div class="mypurchase">
-              <a href="{{ url_for('my_purchases') }}">나의 구매 내역 보기</a>
-          </div>
-          <div class="balance">보유 포인트: <strong>{{ user.points }}P</strong></div>
-        {% else %}
-          <div class="balance" style="color:#888;">로그인 후 구매 및 포인트 확인이 가능합니다.</div>
-        {% endif %}
-        <div class="messages">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, msg in messages %}
-                        <div class="{{ category }}">{{ msg|safe }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+        <a href="{{ url_for('logout') }}">로그아웃</a>
+    {% elif session.get('is_admin') %}
+        <a href="{{ url_for('admin_products') }}">상품관리</a>
+        <a href="{{ url_for('admin_charge') }}">충전승인</a>
+        <a href="{{ url_for('admin_users') }}">회원관리</a>
+        <a href="{{ url_for('admin_access') }}">접근/암호설정</a>
+        <a href="{{ url_for('admin_coupons') }}">쿠폰관리</a>
+        <a href="{{ url_for('admin_purchases') }}">구매내역</a>
+        <a href="{{ url_for('logout') }}">로그아웃</a>
+    {% else %}
+        <a href="{{ url_for('login') }}">로그인</a>
+        <a href="{{ url_for('register') }}">회원가입</a>
+        <a href="{{ url_for('find_id') }}">아이디찾기</a>
+        <a href="{{ url_for('forgot_password') }}">비밀번호찾기</a>
+        <a href="{{ url_for('reviews') }}">구매후기</a>
+    {% endif %}
+</nav>
+<div class="main">
+    {% if notice_content %}
+        <div class="notice">
+            <b>공지사항:</b> {{ notice_content|safe }}
         </div>
-        <h2>상품 목록</h2>
-        <form method="post">
-            <table>
-                <tr><th>상품</th><th>가격</th><th>재고</th>
-                {% if session.user_id %}<th>수량</th><th>구매</th>{% endif %}</tr>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.price }}P</td>
-                    <td>
-                        {% if product.stock > 0 %}
-                            {{ product.stock }}
-                        {% else %}
-                            <span style="color:red;">품절</span>
-                        {% endif %}
-                    </td>
-                    {% if session.user_id %}
-                    <td>
-                        <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}">
-                        <input type="hidden" name="product_id" value="{{ product.id }}">
-                    </td>
-                    <td>
-                        <button type="submit"
-                        {% if user.points < product.price or product.stock <= 0 %}disabled{% endif %}>
-                            구매
-                        </button>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </table>
-        </form>
-        <h2>최근 구매 내역</h2>
-        {% if session.user_id %}
-        <table>
-            <tr><th>상품</th><th>가격</th><th>구매수량</th><th>구매일시</th></tr>
+    {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="msg">
+        {% for category, msg in messages %}
+        <div class="{{ category }}">{{ msg }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% if user %}
+        <div class="user-info">
+            <span><b>{{ user['username'] }}</b>님 환영합니다!</span>
+            <span>보유 포인트: <b style="color:#2563eb;">{{ user['points'] }}</b> P</span>
+        </div>
+    {% elif session.get('is_admin') %}
+        <div class="user-info">
+            <span><b>관리자</b>님 환영합니다!</span>
+        </div>
+    {% endif %}
+
+    <h2 style="color:#23272f; font-size:1.42em; margin:24px 0 17px 0;">상품 목록</h2>
+    <table class="products-table">
+        <tr>
+            <th>상품명</th>
+            <th>가격</th>
+            <th>재고</th>
+            {% if user and not session.get('is_admin') %}
+                <th>구매</th>
+            {% endif %}
+        </tr>
+        {% for p in products %}
+        <tr>
+            <td>{{ p['name'] }}</td>
+            <td>{{ p['price'] }} P</td>
+            <td>{{ p['stock'] }}</td>
+            {% if user and not session.get('is_admin') %}
+            <td>
+                {% if p['stock'] > 0 %}
+                <form class="buy-form" method="post" action="{{ url_for('buy') }}">
+                    <input type="hidden" name="product_id" value="{{ p['id'] }}">
+                    <input type="number" name="quantity" min="1" max="{{ p['stock'] }}" value="1">
+                    <button type="submit" class="buy-btn">구매</button>
+                </form>
+                {% else %}
+                <span style="color:#e11d48;">품절</span>
+                {% endif %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        {% if not products %}
+        <tr>
+            <td colspan="4" class="empty-txt">등록된 상품이 없습니다.</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    {% if purchases %}
+    <div class="purchases-box">
+        <h3>최근 구매 내역</h3>
+        <table class="purchases-table">
+            <tr>
+                <th>구매일자</th>
+                <th>상품명</th>
+                <th>수량</th>
+                <th>총가격</th>
+            </tr>
             {% for purchase in purchases %}
             <tr>
-                <td>{{ purchase.name }}</td>
-                <td>{{ purchase.price }}P</td>
-                <td>{{ purchase.quantity or 1 }}</td>
-                <td>{{ purchase.timestamp }}</td>
+                <td>{{ purchase['timestamp'][:16] }}</td>
+                <td>{{ purchase['name'] }}</td>
+                <td>{{ purchase['quantity'] }}</td>
+                <td>{{ purchase['price'] * purchase['quantity'] }} P</td>
             </tr>
-            {% else %}
-            <tr><td class="empty" colspan="4">구매 내역이 없습니다.</td></tr>
             {% endfor %}
         </table>
-        {% else %}
-            <div class="empty">로그인 시 나의 구매내역이 표시됩니다.</div>
-        {% endif %}
-        <img src="https://dktj.intoryvend.xyz/static/assets/img/favicon/favicon.ico" alt="logo" class="logo-fixed-br">
-        <div class="footer-left">Made by Intory Inc.</div>
     </div>
+    {% endif %}
+</div>
 </body>
 </html>

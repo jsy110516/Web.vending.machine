@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>자판기 접근 설정</title>
+    <style>
+        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: #f6f8fa; margin: 0; color: #202124;}
+        .container { max-width: 500px; margin: 60px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.11); border:1.5px solid #d0d7de; padding: 38px 34px;}
+        h1 { color: #2563eb; text-align: center; margin-bottom: 34px;}
+        form { text-align: center; }
+        .toggle-box { margin: 28px 0 38px 0; padding: 18px; border-radius: 12px; background:#f4f8fb; border:1.5px solid #d0d7de; font-size:1.08em;}
+        .btn { background: #2563eb; color: #fff; border-radius: 6px; border:none; padding: 10px 28px; font-size: 1.09em; font-weight: 600; cursor:pointer; transition:.14s;}
+        .btn:hover { background: #0ea5e9;}
+        .messages { margin-bottom: 22px;}
+        .messages div { padding: 10px 16px; border-radius: 10px; margin-bottom: 10px; font-size: 1.03em; background: #e0f2ff; color: #1e293b; border: 1px solid #bae6fd;}
+        .success { background: #e6ffe6; color: #184d27; border-color: #abefbc;}
+        .danger  { background: #ffeded; color: #a81f1f; border-color: #ffc2c2;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>자판기 접근 설정</h1>
+    <div class="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <form method="post">
+        <div class="toggle-box">
+            <label>
+                <input type="radio" name="allowed" value="1" {% if allowed %}checked{% endif %}> <b style="color:#2563eb;">허용</b>
+            </label>
+            &nbsp;&nbsp;
+            <label>
+                <input type="radio" name="allowed" value="0" {% if not allowed %}checked{% endif %}> <b style="color:#e11d48;">비허용</b>
+            </label>
+            <div style="margin-top:13px;">
+                {% if allowed %}
+                    <span style="color:#2563eb;">현재: <b>허용</b> (사용자들이 자판기 페이지에 접속할 수 있습니다)</span>
+                {% else %}
+                    <span style="color:#e11d48;">현재: <b>비허용</b> (사용자들은 자판기 페이지에 접속할 수 없습니다)</span>
+                {% endif %}
+            </div>
+        </div>
+        <button type="submit" class="btn">설정 저장</button>
+    </form>
+</div>
+</body>
+</html>

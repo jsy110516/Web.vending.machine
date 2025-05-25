@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디 찾기</title>
+    <style>
+        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: #f6f8fa; margin: 0; color: #202124;}
+        .container { max-width: 400px; margin: 90px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.11); border:1.5px solid #d0d7de; padding: 38px 34px;}
+        h1 { color: #2563eb; text-align: center; margin-bottom: 34px;}
+        form { text-align: center; }
+        input[type="email"] { border: 1.5px solid #d0d7de; border-radius: 7px; padding: 9px 10px; font-size: 1.09em; width: 85%; margin-bottom: 18px;}
+        .btn { background: #2563eb; color: #fff; border-radius: 6px; border:none; padding: 10px 32px; font-size: 1.09em; font-weight: 600; cursor:pointer; transition:.14s;}
+        .btn:hover { background: #0ea5e9;}
+        .messages { margin-bottom: 18px;}
+        .messages div { padding: 10px 16px; border-radius: 10px; margin-bottom: 10px; font-size: 1.03em; background: #e0f2ff; color: #1e293b; border: 1px solid #bae6fd;}
+        .success { background: #e6ffe6; color: #184d27; border-color: #abefbc;}
+        .danger  { background: #ffeded; color: #a81f1f; border-color: #ffc2c2;}
+        .result { margin: 18px 0 0 0; font-size: 1.11em; color: #2563eb;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>아이디 찾기</h1>
+    <div class="messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, msg in messages %}
+                    <div class="{{ category }}">{{ msg }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    <form method="post" autocomplete="off">
+        <input type="email" name="email" placeholder="회원가입시 사용한 이메일" required value="{{ email_entered or '' }}"><br>
+        <button type="submit" class="btn">아이디 찾기</button>
+    </form>
+    {% if found_username %}
+        <div class="result">
+            아이디: <b>{{ found_username }}</b> (이메일로도 전송되었습니다.)
+        </div>
+    {% endif %}
+</div>
+</body>
+</html>

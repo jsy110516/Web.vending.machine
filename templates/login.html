@@ -4,78 +4,39 @@
     <meta charset="UTF-8">
     <title>로그인</title>
     <style>
-        :root {
-            --cf-blue: #2563eb;
-            --cf-dark: #202124;
-            --cf-light: #f6f8fa;
-            --cf-border: #d0d7de;
-            --cf-card: #fff;
-            --cf-accent: #0ea5e9;
-            --cf-radius: 12px;
-            --cf-shadow: 0 2px 12px 0 rgba(27, 31, 35, 0.08), 0 1.5px 1.5px 0 rgba(27, 31, 35, 0.03);
-            --cf-sidebar: #f3f6fa;
+        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: #f6f8fa; margin: 0; color: #202124;}
+        .sidebar { position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: #f3f6fa; border-right: 1px solid #d0d7de; display: flex; flex-direction: column; align-items: center; padding-top: 40px; z-index: 100; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.08);}
+        .sidebar a, .sidebar form button { display: block; width: 170px; margin: 12px 0; padding: 13px 0; background: #fff; color: #2563eb; border: 1px solid #d0d7de; border-radius: 12px; text-align: center; font-size: 1.08em; font-weight: 500; text-decoration: none; transition: background 0.13s, color 0.13s, box-shadow 0.13s; cursor: pointer; box-shadow: 0 1.5px 5px rgba(27,31,35,0.04);}
+        .sidebar a:hover, .sidebar form button:hover { background: #2563eb; color: #fff; border-color: #2563eb; box-shadow: 0 0 0 2px #0ea5e933;}
+        @media (max-width: 1100px) {
+            .sidebar { width: 100vw; height: auto; flex-direction: row; justify-content: center; position: static; box-shadow: none; border-right: none; border-bottom: 1.5px solid #d0d7de; padding: 6px 0 3px 0;}
+            .sidebar a, .sidebar form button { width: 110px; margin: 6px 4px; padding: 8px 0; font-size: 0.97em;}
         }
-        body { font-family: 'Inter','Noto Sans KR',sans-serif; background: var(--cf-light); margin:0; color:var(--cf-dark);}
-        .sidebar { position: fixed; top: 0; left: 0; width: 210px; height: 100vh; background: var(--cf-sidebar); border-right: 1px solid var(--cf-border); display: flex; flex-direction: column; align-items: center; padding-top: 40px; z-index: 100; box-shadow: var(--cf-shadow);}
-        .sidebar a, .sidebar form button { display: block; width: 170px; margin: 12px 0; padding: 13px 0; background: var(--cf-card); color: var(--cf-blue); border: 1px solid var(--cf-border); border-radius: var(--cf-radius); text-align: center; font-size: 1.08em; font-weight: 500; text-decoration: none; transition: background 0.13s, color 0.13s, box-shadow 0.13s; cursor: pointer; box-shadow: 0 1.5px 5px rgba(27,31,35,0.04);}
-        .sidebar a:hover, .sidebar form button:hover { background: var(--cf-blue); color: #fff; border-color: var(--cf-blue); box-shadow: 0 0 0 2px var(--cf-accent)33;}
-        .container { background: var(--cf-card); padding: 38px 32px 32px 32px; border-radius: var(--cf-radius); box-shadow: var(--cf-shadow); max-width: 420px; margin: 60px auto; position: relative; margin-left: 250px; border: 1px solid var(--cf-border);}
-        h1 { color: var(--cf-blue); text-align: center; margin-bottom: 28px; font-weight: 700; letter-spacing: 1.5px; font-size: 2.1em;}
-        form { display: flex; flex-direction: column; gap: 16px;}
-        label { font-weight: 500; margin-bottom: 4px; color: var(--cf-blue);}
-        input[type="text"], input[type="password"] { border: 1.5px solid var(--cf-border); border-radius: 7px; padding: 10px 13px; font-size: 1em; background: #f4f8fb; transition: border .15s; outline: none;}
-        input[type="text"]:focus, input[type="password"]:focus { border-color: var(--cf-blue);}
-        button, input[type="submit"] { background: var(--cf-blue); color: #fff; border: none; padding: 12px 0; border-radius: 7px; font-size: 1em; cursor: pointer; transition: background .15s; font-weight: 600;}
-        button:hover, input[type="submit"]:hover { background: var(--cf-accent);}
-        .messages { margin-bottom: 22px;}
-        .messages div { padding: 12px 16px; border-radius: 9px; margin-bottom: 10px; font-size: 1.01em; background: #e0f2ff; color: #1e293b; border: 1px solid #bae6fd;}
+        .container { max-width: 400px; margin: 90px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.11); border:1.5px solid #d0d7de; padding: 38px 34px;}
+        h1 { color: #2563eb; text-align: center; margin-bottom: 34px;}
+        form { text-align: center; }
+        input[type="text"], input[type="password"] { border: 1.5px solid #d0d7de; border-radius: 7px; padding: 9px 10px; font-size: 1.09em; width: 85%; margin-bottom: 18px;}
+        .btn { background: #2563eb; color: #fff; border-radius: 6px; border:none; padding: 10px 32px; font-size: 1.09em; font-weight: 600; cursor:pointer; transition:.14s;}
+        .btn:hover { background: #0ea5e9;}
+        .messages { margin-bottom: 18px;}
+        .messages div { padding: 10px 16px; border-radius: 10px; margin-bottom: 10px; font-size: 1.03em; background: #e0f2ff; color: #1e293b; border: 1px solid #bae6fd;}
         .success { background: #e6ffe6; color: #184d27; border-color: #abefbc;}
         .danger  { background: #ffeded; color: #a81f1f; border-color: #ffc2c2;}
-        .footer-left { position: absolute; left: 16px; bottom: 16px; color: var(--cf-blue); font-size: 0.99em; opacity: 0.8; z-index: 10; font-family: inherit;}
-        .copyright-intory { position: absolute; top: 18px; right: 28px; color: #767676; font-size: 0.93em; z-index: 200; font-family: inherit; opacity: 0.75;}
-        @media (max-width: 900px) {
-            .container { margin-left: 0; max-width: 100vw; border-radius: 0; padding: 10px 2vw;}
-            .sidebar { width: 100vw; height: auto; flex-direction: row; justify-content: center; position: static; box-shadow: none; border-right: none; border-bottom: 1.5px solid var(--cf-border); padding: 6px 0 3px 0;}
-            .sidebar a, .sidebar form button { width: 110px; margin: 6px 4px; padding: 8px 0; font-size: 0.97em;}
-            .footer-left { left: 8px; right: 8px; bottom: 8px;}
-            .copyright-intory { position: static; display: block; text-align: right; margin: 10px 8px 0 0;}
+        .link-group { margin-top: 20px; display: flex; justify-content: center; gap: 22px;}
+        .link-group a { color: #2563eb; font-size: 0.98em; text-decoration: underline; transition: color 0.13s;}
+        .link-group a:hover { color: #0ea5e9; }
+        @media (min-width: 600px) {
+            .container { margin-left: 240px; }
         }
     </style>
 </head>
 <body>
-<script>
-(function(){
-    document.addEventListener('keydown', function(e) {
-        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85) || (e.metaKey && e.altKey && e.keyCode === 73)) { e.preventDefault(); e.stopPropagation(); return false; }
-    });
-    document.addEventListener('contextmenu', function(e){ e.preventDefault(); return false; });
-    document.addEventListener('mousedown', function(e){ if(e.button === 2) { e.preventDefault(); return false; }});
-    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
-    var checkStatus = function() {
-        var before = new Date();
-        debugger;
-        var after = new Date();
-        if(after - before > 200) { window.location.href = '/'; }
-    };
-    setInterval(checkStatus, 1500);
-})();
-</script>
-<span class="copyright-intory">Copyright:Intory</span>
 <nav class="sidebar">
-    <a href="{{ url_for('index') }}">메인(구매)</a>
-    <a href="{{ url_for('reviews') }}">구매후기</a>
-    <a href="{{ url_for('charge_request') }}">충전요청하기</a>
-    {% if session.get('is_admin') %}
-        <a href="{{ url_for('admin_charge') }}">관리자페이지</a>
-        <a href="{{ url_for('admin_products') }}">재고관리</a>
-    {% endif %}
-    {% if session.user_id %}
-        <form action="{{ url_for('logout') }}" method="get" style="margin:0;padding:0;">
-            <button type="submit">로그아웃</button>
-        </form>
-    {% else %}
-        <a href="{{ url_for('login') }}">로그인</a>
-    {% endif %}
+    <a href="{{ url_for('index') }}">제품구매</a>
+    <a href="{{ url_for('login') }}">로그인</a>
+    <a href="{{ url_for('register') }}">회원가입</a>
+    <a href="{{ url_for('find_id') }}">아이디찾기</a>
+    <a href="{{ url_for('forgot_password') }}">비밀번호찾기</a>
 </nav>
 <div class="container">
     <h1>로그인</h1>
@@ -88,15 +49,16 @@
             {% endif %}
         {% endwith %}
     </div>
-    <form method="post">
-        <label for="username">아이디</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">비밀번호</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">로그인</button>
-        <a href="{{ url_for('register') }}" style="margin-top:10px;font-size:0.98em;color:var(--cf-accent);text-align:right;display:block;">회원가입</a>
+    <form method="post" autocomplete="off">
+        <input type="text" name="username" placeholder="아이디" required><br>
+        <input type="password" name="password" placeholder="비밀번호" required><br>
+        <button type="submit" class="btn">로그인</button>
     </form>
-    <div class="footer-left">Made by Intory Inc.</div>
+    <div class="link-group">
+        <a href="{{ url_for('register') }}">회원가입</a>
+        <a href="{{ url_for('find_id') }}">아이디찾기</a>
+        <a href="{{ url_for('forgot_password') }}">비밀번호찾기</a>
+    </div>
 </div>
 </body>
 </html>

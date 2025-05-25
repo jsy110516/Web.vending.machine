@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>네이버페이 결제</title>
+    <style>
+        body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background: #f6f8fa; margin: 0;}
+        .container { max-width: 480px; margin: 80px auto; background: #fff; border-radius: 14px; box-shadow: 0 2px 12px 0 rgba(27,31,35,0.10); border:1.5px solid #d0d7de; padding: 38px 34px; }
+        h1 { color: #03c75a; margin-bottom: 26px; text-align: center;}
+        .product-summary { margin-bottom: 30px; }
+        .product-summary span { display: inline-block; min-width: 84px; color: #1d4ed8; font-weight: 500;}
+        .info-row { margin-bottom: 10px; }
+        .btns { text-align: center; margin-top: 32px;}
+        .btn-naverpay { background: #03c75a; color: #fff; border-radius: 7px; border:none; padding: 13px 42px; font-size: 1.13em; font-weight: 700; cursor:pointer; transition:.14s; box-shadow: 0 2px 8px rgba(3,199,90,0.09);}
+        .btn-naverpay:hover { background: #159b46;}
+        .btn-cancel { background: #e5e7eb; color: #555; border-radius: 7px; border:none; padding: 11px 28px; font-size: 1em; margin-left: 20px; cursor:pointer; transition:.14s;}
+        .btn-cancel:hover { background: #cbd5e1;}
+        .alert { background: #f0f8ff; color: #2563eb; border: 1px solid #b6d3fa; border-radius: 7px; padding: 10px 16px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>네이버페이 결제</h1>
+    {% if error_msg %}
+        <div class="alert">{{ error_msg }}</div>
+    {% endif %}
+    <div class="product-summary">
+        <div class="info-row"><span>상품명</span> {{ product_name }}</div>
+        <div class="info-row"><span>금액</span> {{ amount }} 원</div>
+        <div class="info-row"><span>수량</span> {{ quantity if quantity else 1 }}</div>
+        <div class="info-row"><span>주문번호</span> {{ order_id }}</div>
+    </div>
+    <div class="btns">
+        <form method="post">
+            <input type="hidden" name="product_id" value="{{ product_id }}">
+            <input type="hidden" name="quantity" value="{{ quantity if quantity else 1 }}">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="order_id" value="{{ order_id }}">
+            <input type="hidden" name="product_name" value="{{ product_name }}">
+            <button type="submit" class="btn-naverpay">네이버페이로 결제하기</button>
+            <a href="{{ url_for('index') }}" class="btn-cancel">취소</a>
+        </form>
+    </div>
+    <div style="margin-top: 38px; text-align:center;">
+        <img src="https://static.nid.naver.com/images/web/user/naverpay/naverpay_logo_1x.png" alt="네이버페이" style="width: 120px; opacity: .9;" />
+    </div>
+</div>
+</body>
+</html>
