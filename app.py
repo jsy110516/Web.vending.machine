@@ -31,8 +31,8 @@ def get_db():
 def send_verification_email(to_email, token):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "your_gmail@gmail.com"
-    smtp_pass = "your_gmail_app_password"
+    smtp_user = "koty0516@gmail.com"
+    smtp_pass = "idmfpaxsklkmtshh"
     subject = "이메일 인증 - 포인트 자판기"
     body = f"이메일 인증을 위해 아래 링크를 클릭하세요:\n\nhttp://127.0.0.1:5000/verify_email?token={token}"
     msg = MIMEText(body)
@@ -51,8 +51,8 @@ def send_verification_email(to_email, token):
 def send_reset_email(to_email, token):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "your_gmail@gmail.com"
-    smtp_pass = "your_gmail_app_password"
+    smtp_user = "koty0516@gmail.com"
+    smtp_pass = "idmfpaxsklkmtshh"
     subject = "비밀번호 재설정 - 포인트 자판기"
     body = f"비밀번호 재설정을 위해 아래 링크를 클릭하세요:\n\nhttp://127.0.0.1:5000/reset_password?token={token}"
     msg = MIMEText(body)
@@ -71,8 +71,8 @@ def send_reset_email(to_email, token):
 def send_findid_email(to_email, username):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "your_gmail@gmail.com"
-    smtp_pass = "your_gmail_app_password"
+    smtp_user = "koty0516@gmail.com"
+    smtp_pass = "idmfpaxsklkmtshh"
     subject = "아이디 찾기 결과 - 포인트 자판기"
     body = f"회원님의 아이디(Username)는: {username}\n\n감사합니다."
     msg = MIMEText(body)
@@ -774,4 +774,4 @@ def admin_update_price(product_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=2048)
