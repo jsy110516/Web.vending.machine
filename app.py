@@ -267,9 +267,9 @@ def verify_pass_auth(phone, name, birth):
         return False
 
 # ------------------ SMS 인증번호 발송(SMS API 연동) ------------------
-COOLSMS_API_KEY = "YOUR_COOLSMS_API_KEY"
-COOLSMS_API_SECRET = "YOUR_COOLSMS_API_SECRET"
-COOLSMS_SENDER = "01000000000"  # 쿨SMS 인증된 발신번호
+COOLSMS_API_KEY = "NCSYGPGICNB9WFWP"
+COOLSMS_API_SECRET = "ZDCXW87JZOFB8HNVQDVUPWSRGHUSWQP1"
+COOLSMS_SENDER = "01048471272"  # 쿨SMS 인증된 발신번호
 
 def send_sms(phone, msg):
     url = "https://api.coolsms.co.kr/sms/2/send"
