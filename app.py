@@ -280,6 +280,7 @@ def send_sms(phone, msg):
         "from": COOLSMS_SENDER,
         "text": msg,
         "type": "SMS"
+        "date": ""
     }
     try:
         resp = requests.post(url, data=payload)
