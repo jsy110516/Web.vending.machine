@@ -34,8 +34,8 @@ def get_db():
 def send_verification_email(to_email, token):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "your_gmail@gmail.com"
-    smtp_pass = "your_gmail_app_password"
+    smtp_user = "koty0516@gmail.com"
+    smtp_pass = "idmfpaxsklkmtshh"
     subject = "이메일 인증 - 포인트 자판기"
     body = f"이메일 인증을 위해 아래 링크를 클릭하세요:\n\nhttp://127.0.0.1:5000/verify_email?token={token}"
     msg = MIMEText(body)
@@ -270,9 +270,9 @@ def verify_pass_auth(phone, name, birth):
         return False
 
 # ------------------ 쿨SMS v4 API 연동 ------------------
-COOLSMS_API_KEY = "YOUR_COOLSMS_API_KEY"
-COOLSMS_API_SECRET = "YOUR_COOLSMS_API_SECRET"
-COOLSMS_SENDER = "01012345678"  # 쿨SMS에 등록된 발신번호
+COOLSMS_API_KEY = "NCSYGPGICNB9WFWP"
+COOLSMS_API_SECRET = "ZDCXW87JZOFB8HNVQDVUPWSRGHUSWQP1"
+COOLSMS_SENDER = "01048471272"  # 쿨SMS에 등록된 발신번호
 
 def generate_signature(api_key, api_secret, timestamp, salt):
     message = api_key + timestamp + salt
@@ -782,4 +782,4 @@ def admin_update_price(product_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=2048)
