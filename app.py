@@ -1,15 +1,18 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify, send_from_directory
-import sqlite3
-from datetime import datetime
+import base64
+import hashlib
+import hmac
+import time
+import uuid
+import requests
 import os
+import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, session, flash, g, jsonify, send_from_directory
+from datetime import datetime
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 import smtplib
 from email.mime.text import MIMEText
-import requests
-import random
-import time
 
 DATABASE = 'vending.db'
 UPLOAD_FOLDER = 'static/deposit_images'
@@ -31,8 +34,8 @@ def get_db():
 def send_verification_email(to_email, token):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "koty0516@gmail.com"
-    smtp_pass = "idmfpaxsklkmtshh"
+    smtp_user = "your_gmail@gmail.com"
+    smtp_pass = "your_gmail_app_password"
     subject = "이메일 인증 - 포인트 자판기"
     body = f"이메일 인증을 위해 아래 링크를 클릭하세요:\n\nhttp://127.0.0.1:5000/verify_email?token={token}"
     msg = MIMEText(body)
@@ -51,8 +54,8 @@ def send_verification_email(to_email, token):
 def send_reset_email(to_email, token):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "koty0516@gmail.com"
-    smtp_pass = "idmfpaxsklkmtshh"
+    smtp_user = "your_gmail@gmail.com"
+    smtp_pass = "your_gmail_app_password"
     subject = "비밀번호 재설정 - 포인트 자판기"
     body = f"비밀번호 재설정을 위해 아래 링크를 클릭하세요:\n\nhttp://127.0.0.1:5000/reset_password?token={token}"
     msg = MIMEText(body)
@@ -71,8 +74,8 @@ def send_reset_email(to_email, token):
 def send_findid_email(to_email, username):
     smtp_host = "smtp.gmail.com"
     smtp_port = 587
-    smtp_user = "koty0516@gmail.com"
-    smtp_pass = "idmfpaxsklkmtshh"
+    smtp_user = "your_gmail@gmail.com"
+    smtp_pass = "your_gmail_app_password"
     subject = "아이디 찾기 결과 - 포인트 자판기"
     body = f"회원님의 아이디(Username)는: {username}\n\n감사합니다."
     msg = MIMEText(body)
@@ -266,35 +269,41 @@ def verify_pass_auth(phone, name, birth):
         print("PASS API 예외:", e)
         return False
 
-# ------------------ SMS 인증번호 발송(SMS API 연동) ------------------
-COOLSMS_API_KEY = "NCSYGPGICNB9WFWP"
-COOLSMS_API_SECRET = "ZDCXW87JZOFB8HNVQDVUPWSRGHUSWQP1"
-COOLSMS_SENDER = "01048471272"  # 쿨SMS 인증된 발신번호
+# ------------------ 쿨SMS v4 API 연동 ------------------
+COOLSMS_API_KEY = "YOUR_COOLSMS_API_KEY"
+COOLSMS_API_SECRET = "YOUR_COOLSMS_API_SECRET"
+COOLSMS_SENDER = "01012345678"  # 쿨SMS에 등록된 발신번호
+
+def generate_signature(api_key, api_secret, timestamp, salt):
+    message = api_key + timestamp + salt
+    return base64.b64encode(
+        hmac.new(api_secret.encode('utf-8'), message.encode('utf-8'), hashlib.sha256).digest()
+    ).decode('utf-8')
 
 def send_sms(phone, msg):
-    url = "https://api.coolsms.co.kr/sms/2/send"
-    payload = {
-        "api_key": COOLSMS_API_KEY,
-        "api_secret": COOLSMS_API_SECRET,
-        "to": phone,
-        "from": COOLSMS_SENDER,
-        "text": msg,
-        "type": "SMS"
-        "date": ""
+    url = "https://api.coolsms.co.kr/messages/v4/send"
+    timestamp = str(int(time.time() * 1000))
+    salt = str(uuid.uuid4())
+    signature = generate_signature(COOLSMS_API_KEY, COOLSMS_API_SECRET, timestamp, salt)
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"HMAC-SHA256 apiKey={COOLSMS_API_KEY}, date={timestamp}, salt={salt}, signature={signature}"
     }
-    try:
-        resp = requests.post(url, data=payload)
-        if resp.status_code == 200:
-            r = resp.json()
-            return r.get("success_count", 0) > 0
-        else:
-            print("SMS API 오류:", resp.status_code, resp.text)
-            return False
-    except Exception as e:
-        print("SMS API 예외:", e)
+    payload = {
+        "messages": [{
+            "to": phone,
+            "from": COOLSMS_SENDER,
+            "text": msg
+        }]
+    }
+    resp = requests.post(url, headers=headers, json=payload)
+    if resp.status_code in [200, 202]:
+        return True
+    else:
+        print("SMS API 오류:", resp.status_code, resp.text)
         return False
 
-# {전화번호: (인증번호, 만료시각)} 3분 제한
+import time as pytime
 phone_auth_codes = {}
 
 @app.route('/send_phone_code', methods=['POST'])
@@ -302,18 +311,18 @@ def send_phone_code():
     phone = request.form['phone']
     if not phone or not phone.isdigit():
         return jsonify({'ok': False, 'msg': '올바른 휴대폰번호를 입력하세요.'})
-    code = str(random.randint(100000, 999999))
+    code = str(uuid.uuid4().int)[0:6]
     msg = f"[포인트자판기] 인증번호: {code}"
     ok = send_sms(phone, msg)
     if ok:
-        expire = int(time.time()) + 180  # 3분 후 만료
+        expire = int(pytime.time()) + 180  # 3분 후 만료
         phone_auth_codes[phone] = (code, expire)
         return jsonify({'ok': True, 'msg': '인증번호가 발송되었습니다.'})
     else:
         return jsonify({'ok': False, 'msg': '인증번호 발송에 실패했습니다.'})
 
 def check_phone_code(phone, user_code):
-    now = int(time.time())
+    now = int(pytime.time())
     data = phone_auth_codes.get(phone)
     if not data:
         return False
@@ -417,8 +426,6 @@ def register():
         flash('회원가입이 완료되었습니다. 이메일 인증을 진행해주세요.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html')
-
-# ------------ 이하 라우트 전체(로그인, 로그아웃, 아이디찾기, 비번찾기, 마이페이지, 관리자 등) 위 답변 참고해 모두 추가 ------------
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -775,4 +782,4 @@ def admin_update_price(product_id):
 
 if __name__ == '__main__':
     init_db()
-    app.run(host="0.0.0.0",port=2048)
+    app.run(debug=True)
